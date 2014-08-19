@@ -1,0 +1,18 @@
+{
+  "name": "stenograph",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "lab -t 100 test"
+  },
+  "author": "Jacob Chapel <jacob.chapel@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "nesting-doll": "^0.0.2"
+  },
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "lab": "^4.0.2"
+  }
+}
