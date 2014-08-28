@@ -11,7 +11,7 @@
   "dependencies": {
     "hoek": "^2.4.1",
     "lab": "^4.2.0",
-    "nesting-doll": "^0.0.2",
+    "nesting-doll": "^1.0.0",
     "once": "^1.3.0"
   },
   "devDependencies": {
