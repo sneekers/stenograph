@@ -84,6 +84,19 @@ Stenograph.prototype.currentTransaction = function () {
   return this.nestingDoll.currentDoll();
 };
 
+Stenograph.prototype.currentTransactionChain = function (transaction) {
+  var chain = [];
+
+  transaction = transaction || this.currentTransaction();
+
+  while (transaction) {
+    chain.push(transaction);
+    transaction = transaction.previous();
+  }
+
+  return chain.reverse();
+};
+
 Stenograph.prototype.bindEmitters = function (emitters) {
   Hoek.assert(emitters, 'emitters should exist');
 

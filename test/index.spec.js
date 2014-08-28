@@ -344,6 +344,107 @@ describe('Stenograph', function () {
 
   });
 
+  describe('currentTransactionChain', function () {
+
+    var currentTransaction;
+    beforeEach(function (done) {
+      currentTransaction = steno.currentTransaction;
+      done();
+    });
+
+    afterEach(function (done) {
+      steno.currentTransaction = currentTransaction;
+      done();
+    });
+
+    describe('current transaction', function () {
+
+      it('returns an empty array if no transactions', function (done) {
+        steno.currentTransaction = function () {
+          return null;
+        };
+
+        var transactions = steno.currentTransactionChain();
+
+        expect(transactions).to.be.empty;
+        done();
+      });
+
+      it('returns single transaction in an array', function (done) {
+        var transaction = steno.nestingDoll.nest('foo');
+
+        steno.currentTransaction = function () {
+          return transaction;
+        };
+
+        var transactions = steno.currentTransactionChain();
+
+        expect(transactions)
+          .to.have.length(1).and
+          .to.have.property('0', transaction);
+
+        done();
+      });
+
+      it('returns multiple transactions in an array top to bottom order', function (done) {
+        var transaction = steno.nestingDoll.nest('foo');
+        var previous = transaction._previous = steno.nestingDoll.nest('bar');
+
+        steno.currentTransaction = function () {
+          return transaction;
+        };
+
+        var transactions = steno.currentTransactionChain();
+
+        expect(transactions)
+          .to.have.length(2).and
+          .to.have.property('0', previous);
+        expect(transactions).to.have.property('1', transaction);
+
+        done();
+      });
+
+    });
+
+    describe('passed in transaction', function () {
+
+      it('returns an empty array if transaction is null', function (done) {
+        var transactions = steno.currentTransactionChain(null);
+
+        expect(transactions).to.be.empty;
+        done();
+      });
+
+      it('returns single transaction in an array', function (done) {
+        var transaction = steno.nestingDoll.nest('foo');
+
+        var transactions = steno.currentTransactionChain(transaction);
+
+        expect(transactions)
+          .to.have.length(1).and
+          .to.have.property('0', transaction);
+
+        done();
+      });
+
+      it('returns multiple transactions in an array top to bottom order', function (done) {
+        var transaction = steno.nestingDoll.nest('foo');
+        var previous = transaction._previous = steno.nestingDoll.nest('bar');
+
+        var transactions = steno.currentTransactionChain(transaction);
+
+        expect(transactions)
+          .to.have.length(2).and
+          .to.have.property('0', previous);
+        expect(transactions).to.have.property('1', transaction);
+
+        done();
+      });
+
+    });
+
+  });
+
   describe('events', function () {
 
     it('is an event emitter', function (done) {
