@@ -47,11 +47,16 @@ Stenograph.prototype.startTransaction = function (name, options) {
   Hoek.assert(options, 'options should be an object');
   Hoek.assert(typeof options.transaction === 'function', 'options.transaction should be a function');
 
+  var transaction = options.transaction;
+  var callback = options.callback || Stenograph.NOOP;
+
+  if (!this.hasListeners()) {
+    return transaction(callback);
+  }
+
   var self = this;
   var doll = this.nestingDoll.nest(name, options.state);
   var context = doll.namespace.createContext();
-  var transaction = options.transaction;
-  var callback = options.callback || Stenograph.NOOP;
 
   var end = doll.rawBind(once(function () {
     doll.deactivate();
@@ -66,6 +71,13 @@ Stenograph.prototype.startTransaction = function (name, options) {
   }, context);
 
   return startTransaction();
+};
+
+Stenograph.prototype.hasListeners = function () {
+  var startListeners = this.events.listeners('transaction-start');
+  var endListeners = this.events.listeners('transaction-end');
+
+  return !!(startListeners.length || endListeners.length);
 };
 
 Stenograph.prototype.currentTransaction = function () {

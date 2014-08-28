@@ -18,9 +18,20 @@ describe('Stenograph', function () {
 
   var steno;
   var namespace;
+  var hasListeners;
   beforeEach(function (done) {
+    hasListeners = Stenograph.prototype.hasListeners;
+    Stenograph.prototype.hasListeners = function () {
+      return true;
+    };
+
     steno = new Stenograph();
     namespace = steno.namespace;
+    done();
+  });
+
+  afterEach(function (done) {
+    Stenograph.prototype.hasListeners = hasListeners;
     done();
   });
 
@@ -200,6 +211,68 @@ describe('Stenograph', function () {
 
     });
 
+    it('immediately runs the transaction if there are no listeners', function (done) {
+      var callback = function () {
+        return true;
+      };
+
+      steno.hasListeners = function () {
+        return false;
+      };
+
+      steno.startTransaction('foo', {
+        transaction: function (end) {
+          expect(end).to.equal(callback);
+          done();
+        },
+        callback: callback
+      });
+    });
+
+  });
+
+  describe('hasListeners', function () {
+
+    beforeEach(function (done) {
+      Stenograph.prototype.hasListeners = hasListeners;
+
+      done();
+    });
+
+    it('returns false if there are no listeners', function (done) {
+      var localSteno = new Stenograph();
+
+      expect(localSteno.hasListeners()).to.be.false;
+      done();
+    });
+
+    it('returns true if there is an onStart listener', function (done) {
+      var localSteno = new Stenograph();
+
+      localSteno.onStart(function () {});
+
+      expect(localSteno.hasListeners()).to.be.true;
+      done();
+    });
+
+    it('returns true if there is an onEnd listener', function (done) {
+      var localSteno = new Stenograph();
+
+      localSteno.onEnd(function () {});
+
+      expect(localSteno.hasListeners()).to.be.true;
+      done();
+    });
+
+    it('returns true if there are both listener', function (done) {
+      var localSteno = new Stenograph();
+
+      localSteno.onStart(function () {});
+      localSteno.onEnd(function () {});
+
+      expect(localSteno.hasListeners()).to.be.true;
+      done();
+    });
   });
 
   describe('currentTransaction', function () {
