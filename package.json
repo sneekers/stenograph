@@ -1,6 +1,6 @@
 {
   "name": "stenograph",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Nested transaction library, used to enhance existing logging libraries",
   "main": "index.js",
   "scripts": {
