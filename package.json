@@ -6,6 +6,14 @@
   "scripts": {
     "test": "lab -t 100 test"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sneekers/stenograph.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sneekers/stenograph/issues"
+  },
+  "homepage": "https://github.com/sneekers/stenograph",
   "author": "Jacob Chapel <jacob.chapel@gmail.com>",
   "license": "MIT",
   "dependencies": {
