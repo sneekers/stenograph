@@ -155,6 +155,24 @@ describe('Stenograph', function () {
         done();
       });
 
+      it('only calls the callback once', function (done) {
+        var called = 0;
+
+        steno.startTransaction('foo', {
+          transaction: function (end) {
+            end();
+            end();
+          },
+          callback: function () {
+            called += 1;
+            expect(called).to.equal(1);
+          }
+        });
+
+        expect(called).to.equal(1);
+        done();
+      });
+
       it('sets the same namespace context for transaction and callback', function (done) {
         var originalContext = namespace.active;
         var transactionContext;
@@ -212,9 +230,29 @@ describe('Stenograph', function () {
     });
 
     it('immediately runs the transaction if there are no listeners', function (done) {
-      var callback = function () {
-        return true;
+      var called = 0;
+
+      steno.hasListeners = function () {
+        return false;
       };
+
+      steno.onStart(function () {
+        called += 1;
+      });
+
+      steno.startTransaction('foo', {
+        transaction: function (end) {
+          end();
+        },
+        callback: function () {
+          expect(called).to.equal(0);
+          done();
+        }
+      });
+    });
+
+    it('immediately runs the transaction only once if there are no listeners', function (done) {
+      var called = 0;
 
       steno.hasListeners = function () {
         return false;
@@ -222,11 +260,17 @@ describe('Stenograph', function () {
 
       steno.startTransaction('foo', {
         transaction: function (end) {
-          expect(end).to.equal(callback);
-          done();
+          end();
+          end();
         },
-        callback: callback
+        callback: function () {
+          called += 1;
+          expect(called).to.equal(1);
+        }
       });
+
+      expect(called).to.equal(1);
+      done();
     });
 
   });

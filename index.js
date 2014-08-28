@@ -51,7 +51,7 @@ Stenograph.prototype.startTransaction = function (name, options) {
   var callback = options.callback || Stenograph.NOOP;
 
   if (!this.hasListeners()) {
-    return transaction(callback);
+    return transaction(once(callback));
   }
 
   var self = this;
