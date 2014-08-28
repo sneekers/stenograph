@@ -102,12 +102,12 @@ Stenograph.prototype.onEnd = function (handler) {
   this.events.on('transaction-end', handler);
 };
 
-Stenograph.prototype.get = function () {
-  return this.namespace.get.apply(this.namespace, arguments);
+Stenograph.prototype.get = function (key) {
+  return this.namespace.get(key);
 };
 
-Stenograph.prototype.set = function () {
-  return this.namespace.set.apply(this.namespace, arguments);
+Stenograph.prototype.set = function (key, value) {
+  return this.namespace.set(key, value);
 };
 
 module.exports = Stenograph;
