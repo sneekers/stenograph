@@ -1,6 +1,6 @@
 {
   "name": "stenograph",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Nested transaction library, used to enhance existing logging libraries",
   "main": "index.js",
   "scripts": {
@@ -18,12 +18,11 @@
   "license": "MIT",
   "dependencies": {
     "hoek": "^2.4.1",
-    "lab": "^4.2.0",
-    "nesting-doll": "^1.0.0",
+    "nesting-doll": "^1.0.2",
     "once": "^1.3.0"
   },
   "devDependencies": {
     "chai": "^1.9.1",
-    "lab": "^4.0.2"
+    "lab": "^4.2.0"
   }
 }

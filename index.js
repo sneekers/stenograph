@@ -56,7 +56,7 @@ Stenograph.prototype.startTransaction = function (name, options) {
 
   var self = this;
   var doll = this.nestingDoll.nest(name, options.state);
-  var context = doll.namespace.createContext();
+  var context = doll.context = doll.namespace.createContext();
 
   var end = doll.rawBind(once(function () {
     doll.deactivate();
