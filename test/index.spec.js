@@ -96,28 +96,6 @@ describe('Stenograph', function () {
         done();
       });
 
-      it('sets the same namespace context for transaction and end', function (done) {
-        var originalContext = namespace.active;
-        var transactionContext;
-
-        expect(originalContext).to.be.null;
-
-        Stenograph.NOOP = function () {
-          expect(namespace.active).to.not.equal(originalContext);
-          expect(namespace.active).to.equal(transactionContext);
-        };
-
-        steno.startTransaction('foo', {
-          transaction: function (end) {
-            expect(namespace.active).to.not.equal(originalContext);
-
-            transactionContext = namespace.active;
-            end();
-          }
-        });
-        done();
-      });
-
     });
 
     describe('with callback', function () {
@@ -170,48 +148,6 @@ describe('Stenograph', function () {
         });
 
         expect(called).to.equal(1);
-        done();
-      });
-
-      it('sets the same namespace context for transaction and callback', function (done) {
-        var originalContext = namespace.active;
-        var transactionContext;
-
-        expect(originalContext).to.be.null;
-
-        steno.startTransaction('foo', {
-          transaction: function (end) {
-            expect(namespace.active).to.not.equal(originalContext);
-
-            transactionContext = namespace.active;
-            end();
-          },
-          callback: function () {
-            expect(namespace.active).to.not.equal(originalContext);
-            expect(namespace.active).to.equal(transactionContext);
-          }
-        });
-        done();
-      });
-
-      it('works across async functions', function (done) {
-        var context = namespace.active;
-
-        expect(context).to.be.null;
-
-        steno.startTransaction('foo', {
-          transaction: function (end) {
-            expect(namespace.active).to.not.equal(context);
-
-            context = namespace.active;
-            setTimeout(function () {
-              end();
-            });
-          },
-          callback: function () {
-            expect(namespace.active).to.equal(context);
-          }
-        });
         done();
       });
 

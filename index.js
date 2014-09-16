@@ -12,6 +12,8 @@ function Stenograph(options) {
 
   this.nestingDoll = new NestingDoll();
   this.namespace = this.nestingDoll._namespace;
+
+  this.bindEmitters(this.events);
 }
 
 Stenograph.EVENTS = '__steno_events__';
@@ -56,21 +58,18 @@ Stenograph.prototype.startTransaction = function (name, options) {
 
   var self = this;
   var doll = this.nestingDoll.nest(name, options.state);
-  var context = doll.context = doll.namespace.createContext();
 
   var end = doll.rawBind(once(function () {
     doll.deactivate();
     self.events.emit('transaction-end', doll);
     return callback.apply(null, arguments);
-  }), context);
+  }));
 
-  var startTransaction = doll.bind(function () {
+  return doll.run(function () {
     doll.activate();
     self.events.emit('transaction-start', doll);
     return transaction(end);
-  }, context);
-
-  return startTransaction();
+  });
 };
 
 Stenograph.prototype.hasListeners = function () {
